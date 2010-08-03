@@ -12,7 +12,7 @@ require_once '../src/CarlosFerrari/SimpleCrawler/Crawler.php';
 use CarlosFerrari\SimpleCrawler\Crawler as Crawler;
 use CarlosFerrari\SimpleCrawler\Request as Request;
 
-// onConplete callback
+// onComplete callback
 $complete = function($response){
 	
 };
@@ -24,7 +24,7 @@ $error = function($response, $request, $self){
 	if ($response->code==302 || $response->code==301){
 		$r = new Request($response->headers['Location'], $request->method);
 		$r->callbacks = $self->callbacks;
-		echo "Redirecionando para: {$r->request->uri}\n";
+		echo "Redirecting to: {$r->request->uri}\n";
 		Crawler::getInstance()->addRequest($r)->work();
 	}else{
 		// if it's another kind of error
