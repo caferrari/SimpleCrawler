@@ -18,29 +18,29 @@ class Request
 {
 
 	/**
-     * @var sent request storage
-     */
+	 * @var sent request storage
+	 */
 	public $request;
 	
 	/**
-     * @var response request storage
-     */
+	 * @var response request storage
+	 */
 	public $response = false;
 	
 	/**
-     * @var callbacks closures storage
-     */
+	 * @var callbacks closures storage
+	 */
 	public $callbacks = array();
 	
 	/**
-     * Request Constructor
-     *
-     * @param string $url 		url to be fetched
-     * @param string $method    HTTP method to be used
-     * @param string $headers	HTTP custom headers to be sent
-     *
-     * @return void
-     */
+	 * Request Constructor
+	 *
+	 * @param string $url 		url to be fetched
+	 * @param string $method    HTTP method to be used
+	 * @param string $headers	HTTP custom headers to be sent
+	 *
+	 * @return void
+	 */
 	public function __construct($url, $method='GET', $headers='') {
 		// parse the request url into a object
 		$this->request = (object)parse_url($url);
@@ -69,26 +69,26 @@ class Request
 	}
 
 	/**
-     * set one callback, if the callback name is not valid it'll throw a exception
-     *
-     * @param string 	$name 		name of the event
-     * @param function 	$function 	Function to be executed when the event occur
-     *
-     * @return void
-     */
+	 * set one callback, if the callback name is not valid it'll throw a exception
+	 *
+	 * @param string 	$name 		name of the event
+	 * @param function 	$function 	Function to be executed when the event occur
+	 *
+	 * @return void
+	 */
 	public function setCallback($name, $function){
 		if (!isset($this->callbacks[$name])) throw new \Exception("Invalid callback!");
 		$this->callbacks[$name] = $function;
 	}
 
 	/**
-     * Execute one callback
-     *
-     * @param string 	$name 		name of the event
-     * @param function 	$data 		Optional data to be passed
-     *
-     * @return void
-     */
+	 * Execute one callback
+	 *
+	 * @param string 	$name 		name of the event
+	 * @param function 	$data 		Optional data to be passed
+	 *
+	 * @return void
+	 */
 	public function execCallback($name, $data=''){
 		if (isset($this->callbacks[$name])) $this->callbacks[$name]($this->response, $this->request, $this);
 	}

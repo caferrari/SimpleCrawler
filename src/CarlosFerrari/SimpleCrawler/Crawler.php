@@ -19,99 +19,99 @@ class Crawler
 
 	/**
 	 * Debug level
-     * @var boolean
-     */
+	 * @var boolean
+	 */
 	public $debug = 0;
 	
 	/**
 	 * 
-     * @staticvar   CarlosFerrari\SimpleCrawler\Crawler
+	 * @staticvar   CarlosFerrari\SimpleCrawler\Crawler
 	 * @access		protected
-     */
+	 */
 	protected static $instance = null;
 	
 	/**
 	 * Resolved hosts IPs
-     * @staticvar   array
+	 * @staticvar   array
 	 * @access		protected
-     */
+	 */
 	protected static $hosts = array();
 	
 	/**
 	 * Requisitions IDs
-     * @staticvar   integer
+	 * @staticvar   integer
 	 * @access		protected
-     */
+	 */
 	static $ids = -1;
 	
 	/**
 	 * Requests in execution
-     * @var   		array;
+	 * @var   		array;
 	 * @access		protected
-     */
+	 */
 	protected $requests = array();
 	
 	/**
 	 * Responses in execution
-     * @var   		array;
+	 * @var   		array;
 	 * @access		protected
-     */
+	 */
 	protected $responses = array();
 	
 	/**
 	 * Steam resources storage
-     * @var   		array;
+	 * @var   		array;
 	 * @access		protected
-     */
+	 */
 	protected $reqs = array();
 	
 	/**
 	 * Flag to control if the Crawler is working
-     * @var   		array;
+	 * @var   		array;
 	 * @access		protected
-     */
+	 */
 	protected $isWorking = false;
 	
 	/**
 	 * Requisitions quewe
-     * @var   		array;
+	 * @var   		array;
 	 * @access		protected
-     */
+	 */
 	protected $quewe = array();
 	
 	/**
 	 * Open connections pool
-     * @var   		array;
+	 * @var   		array;
 	 * @access		protected
-     */
+	 */
 	protected $connectionPool = array();
 	
 	/**
 	 * Open connections timeout
-     * @var   		int;
+	 * @var   		int;
 	 * @access		protected
-     */
+	 */
 	protected $connectionTimeout = 2;
 	
 	/**
 	 * Max number of connections
-     * @var   		int;
+	 * @var   		int;
 	 * @access		protected
-     */
+	 */
 	protected $workers = 10;
 	
 	/**
 	 * Max bandwidth in kb/s
-     * @var   		int;
+	 * @var   		int;
 	 * @access		protected
-     */
+	 */
 	protected $bandwidth = 50;
 	
 	/**
 	 * Status
-     * @var   		array;
+	 * @var   		array;
 	 * @access		protected
-     */
+	 */
 	protected $status = array(
 		'startTime' => 0,
 		'endTime' => 0,
@@ -122,49 +122,49 @@ class Crawler
 	);
 	
 	/**
-     * protected Constructor to force singleton mode only
-     *
-     * @access		protected
-     *
-     * @return void
-     */
+	 * protected Constructor to force singleton mode only
+	 *
+	 * @access		protected
+	 *
+	 * @return void
+	 */
 	protected function __construct(){
 		$this->workers = $this->bandwidth;
 		// singleton
 	}
 	
 	/**
-     * print debug messages
-     *
-     * @param string $msg 		Message to be printed
-     * @access		protected
-     *
-     * @return void
-     */
+	 * print debug messages
+	 *
+	 * @param string $msg 		Message to be printed
+	 * @access		protected
+	 *
+	 * @return void
+	 */
 	protected function debug($msg, $level = 5){
 		if ($this->debug >= $level) echo $msg . "\n";
 	}
 	
 	/**
-     * get the CarlosFerrari\SimpleCrawler\Crawler instance
-     *
-     * @access		protected
-     *
-     * @return CarlosFerrari\SimpleCrawler\Crawler
-     */
+	 * get the CarlosFerrari\SimpleCrawler\Crawler instance
+	 *
+	 * @access		protected
+	 *
+	 * @return CarlosFerrari\SimpleCrawler\Crawler
+	 */
 	public function getInstance(){
 		if (self::$instance==null) self::$instance = new Crawler();
 		return self::$instance;
 	}
 	
 	/**
-     * Add one request to the quewe
-     *
-     * @access		public
-     * @param CarlosFerrari\SimpleCrawler\Request $request
-     *
-     * @return CarlosFerrari\SimpleCrawler\Crawler
-     */	
+	 * Add one request to the quewe
+	 *
+	 * @access		public
+	 * @param CarlosFerrari\SimpleCrawler\Request $request
+	 *
+	 * @return CarlosFerrari\SimpleCrawler\Crawler
+	 */	
 	public function addRequest(Request $request){
 		if (count($this->reqs) < $this->workers){
 			$this->execRequest($request);
@@ -177,13 +177,13 @@ class Crawler
 	}
 	
 	/**
-     * Set the max suported speed
-     *
-     * @access		public
-     * @param float $mb
-     *
-     * @return void
-     */
+	 * Set the max suported speed
+	 *
+	 * @access		public
+	 * @param float $mb
+	 *
+	 * @return void
+	 */
 	public function setBandwidth($mb){
 		$this->bandwidth = ceil($mb * 102.4);
 		$this->workers = $this->bandwidth;
@@ -191,12 +191,12 @@ class Crawler
 	}
 
 	/**
-     * Veryfy the bandwidth usage and change the number of workers for a better use
-     *
-     * @access		private
-     *
-     * @return void
-     */	
+	 * Veryfy the bandwidth usage and change the number of workers for a better use
+	 *
+	 * @access		private
+	 *
+	 * @return void
+	 */	
 	private function checkBandwidthUsage(){
 		$now = microtime(true);
 		$diffTime = $now - $this->status['tickTime'];
@@ -217,13 +217,13 @@ class Crawler
 	}
 
 	/**
-     * Exec one request
-     *
-     * @access		private
-     * @param CarlosFerrari\SimpleCrawler\Request $request
-     *
-     * @return void
-     */			
+	 * Exec one request
+	 *
+	 * @access		private
+	 * @param CarlosFerrari\SimpleCrawler\Request $request
+	 *
+	 * @return void
+	 */			
 	private function execRequest(Request $request){
 		$id = ++self::$ids;
 		$this->status['requests']++;
@@ -235,14 +235,14 @@ class Crawler
 	}
 	
 	/**
-     * Find a previowsly open connection in the pool or create a new one
-     *
-     * @access		private
-     * @param string 	$host
-     * @param int 		$port
-     *
-     * @return stream
-     */	
+	 * Find a previowsly open connection in the pool or create a new one
+	 *
+	 * @access		private
+	 * @param string 	$host
+	 * @param int 		$port
+	 *
+	 * @return stream
+	 */	
 	public function checkPool($host, $port=80){
 	
 		if (isset($this->connectionPool[$host]) 
@@ -270,12 +270,12 @@ class Crawler
 	}
 	
 	/**
-     * Close all opened connections in the pool
-     *
-     * @access		private
-     *
-     * @return void
-     */	
+	 * Close all opened connections in the pool
+	 *
+	 * @access		private
+	 *
+	 * @return void
+	 */	
 	private function closePool(){
 		foreach ($this->connectionPool as $host){
 			foreach ($host as $connection){
@@ -286,12 +286,12 @@ class Crawler
 	}
 
 	/**
-     * Check the quewe list and add requests if needed
-     *
-     * @access		private
-     *
-     * @return void
-     */		
+	 * Check the quewe list and add requests if needed
+	 *
+	 * @access		private
+	 *
+	 * @return void
+	 */		
 	private function checkQuewe(){
 		$this->checkBandwidthUsage();
 		$size = count($this->quewe);
@@ -312,12 +312,12 @@ class Crawler
 	}
 	
 	/**
-     * Tell the crawler to start the work
-     *
-     * @access		public
-     *
-     * @return void
-     */		
+	 * Tell the crawler to start the work
+	 *
+	 * @access		public
+	 *
+	 * @return void
+	 */		
 	public function work(){
 		if ($this->isWorking) return;
 		
@@ -349,12 +349,12 @@ class Crawler
 	}
 	
 	/**
-     * calculate the final stats and print in the console
-     *
-     * @access		private
-     *
-     * @return void
-     */	
+	 * calculate the final stats and print in the console
+	 *
+	 * @access		private
+	 *
+	 * @return void
+	 */	
 	private function calcStat(){
 		$this->status['endTime'] = microtime(true);
 		$this->status['totalTime'] = $this->status['endTime'] - $this->status['startTime'];
@@ -363,13 +363,13 @@ class Crawler
 	}
 
 	/**
-     * Read data received from the stream
-     *
-     * @param int 	$id
-     * @access		private
-     *
-     * @return boolean
-     */		
+	 * Read data received from the stream
+	 *
+	 * @param int 	$id
+	 * @access		private
+	 *
+	 * @return boolean
+	 */		
 	private function read($id){
 		$this->debug("$id: reading data", 6);
 		$buffer = fgets($this->reqs[$id], 8192);
@@ -420,13 +420,13 @@ class Crawler
 	}
 	
 	/**
-     * Write request headers into the stream
-     *
-     * @param int 	$id
-     * @access		private
-     *
-     * @return void
-     */
+	 * Write request headers into the stream
+	 *
+	 * @param int 	$id
+	 * @access		private
+	 *
+	 * @return void
+	 */
 	private function write($id){
 		if ($this->requests[$id]->sent) return;
 		fwrite($this->reqs[$id], $this->requests[$id]->request->headers . "\r\n\r\n");
@@ -435,13 +435,13 @@ class Crawler
 	}
 
 	/**
-     * Load the received headers into an array
-     *
-     * @param string 	$content
-     * @access		private
-     *
-     * @return void
-     */	
+	 * Load the received headers into an array
+	 *
+	 * @param string 	$content
+	 * @access		private
+	 *
+	 * @return void
+	 */	
 	private function loadHeaders($content){
 		$tmp = explode("\r\n\r\n", $content);
 		$headers = $tmp[0];
@@ -469,13 +469,13 @@ class Crawler
 	}
 	
 	/**
-     * Close the connection to the server
-     *
-     * @param string 	$content
-     * @access		private
-     *
-     * @return void
-     */		
+	 * Close the connection to the server
+	 *
+	 * @param string 	$content
+	 * @access		private
+	 *
+	 * @return void
+	 */		
 	private function close($id){
 		$this->debug("$id: Request finished", 5);
 
